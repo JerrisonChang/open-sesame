@@ -42,6 +42,7 @@ optpr.add_option("--mode", dest="mode", type="choice",
 optpr.add_option("-n", "--model_name", help="Name of model directory to save model to.")
 optpr.add_option("--raw_input", type="str", metavar="FILE")
 optpr.add_option("--config", type="str", metavar="FILE")
+optpr.add_option("--output_suffix", type="str", metavar="FILE", default="")
 (options, args) = optpr.parse_args()
 
 model_dir = "logs/{}/".format(options.model_name)
@@ -110,7 +111,8 @@ elif options.mode == "predict":
     assert options.raw_input is not None
     with open(options.raw_input, "r") as fin:
         instances = [make_data_instance(line, i) for i, line in enumerate(fin)]
-    out_conll_file = "{}predicted-targets.conll".format(model_dir)
+    suffix = f"__{options.output_suffix}" if options.output_suffix else ""
+    out_conll_file = "{}predicted-targets{}.conll".format(model_dir, suffix)
 else:
     raise Exception("Invalid parser mode", options.mode)
 

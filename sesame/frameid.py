@@ -45,6 +45,7 @@ optpr.add_option("--hier", action="store_true", default=False)
 optpr.add_option("--exemplar", action="store_true", default=False)
 optpr.add_option("--raw_input", type="str", metavar="FILE")
 optpr.add_option("--config", type="str", metavar="FILE")
+optpr.add_option("--output_suffix", type="str", metavar="FILE", default="")
 (options, args) = optpr.parse_args()
 
 model_dir = "logs/{}/".format(options.model_name)
@@ -110,7 +111,8 @@ elif options.mode == "test":
 elif options.mode == "predict":
     assert options.raw_input is not None
     instances, _, _ = read_conll(options.raw_input)
-    out_conll_file = "{}predicted-frames.conll".format(model_dir)
+    suffix = f"__{options.output_suffix}" if options.output_suffix else ""
+    out_conll_file = "{}predicted-frames{}.conll".format(model_dir, suffix)
 else:
     raise Exception("Invalid parser mode", options.mode)
 
