@@ -303,7 +303,7 @@ def get_wvec_map():
     else:
         raise Exception('Pretrained embeddings file needs to be a text file, not archive!',
                         EMBEDDINGS_FILE)
-    wvf = open(embs_file, 'r')
+    wvf = open(embs_file, 'r', encoding='utf-8')
     wvf.readline()
     wd_vecs = {VOCDICT.addstr(line.split(' ')[0]) :
                 [float(f) for f in line.strip().split(' ')[1:]] for line in wvf}

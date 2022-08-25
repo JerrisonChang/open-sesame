@@ -45,8 +45,8 @@ optpr.add_option("--config", type="str", metavar="FILE")
 optpr.add_option("--output_suffix", type="str", metavar="FILE", default="")
 (options, args) = optpr.parse_args()
 
-model_dir = "logs/{}/".format(options.model_name)
-model_file_name = "{}best-targetid-{}-model".format(model_dir, VERSION)
+model_dir = os.path.normpath("logs/{}/".format(options.model_name))
+model_file_name = os.path.join(model_dir, f"best-targetid-{VERSION}-model")
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 

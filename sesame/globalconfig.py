@@ -14,6 +14,7 @@
 # limitations under the License.
 import json
 import sys
+import os
 
 config_json = open("configurations/global_config.json", "r")
 configuration = json.load(config_json)
@@ -28,18 +29,18 @@ ARGID_LR = configuration["argid_lr"]
 
 # The following variables are held constant throughout the repository. Change at your own peril!
 
-PARSER_DATA_DIR = DATA_DIR + "open_sesame_v1_data/fn" + VERSION + "/"
-TRAIN_FTE = PARSER_DATA_DIR + "fn" + VERSION + ".fulltext.train.syntaxnet.conll"
-TRAIN_EXEMPLAR = PARSER_DATA_DIR + "fn" + VERSION + ".exemplar.train.syntaxnet.conll"
-DEV_CONLL = PARSER_DATA_DIR + "fn" + VERSION + ".dev.syntaxnet.conll"
-TEST_CONLL = PARSER_DATA_DIR + "fn" + VERSION + ".test.syntaxnet.conll"
+PARSER_DATA_DIR = os.path.normpath(DATA_DIR + "open_sesame_v1_data/fn" + VERSION + "/")
+TRAIN_FTE = os.path.join(PARSER_DATA_DIR , "fn" + VERSION + ".fulltext.train.syntaxnet.conll")
+TRAIN_EXEMPLAR = os.path.join(PARSER_DATA_DIR, "fn" + VERSION + ".exemplar.train.syntaxnet.conll")
+DEV_CONLL = os.path.join(PARSER_DATA_DIR , "fn" + VERSION + ".dev.syntaxnet.conll")
+TEST_CONLL = os.path.join(PARSER_DATA_DIR , "fn" + VERSION + ".test.syntaxnet.conll")
 
-FN_DATA_DIR = DATA_DIR + "fndata-" + VERSION + "/"
-LU_INDEX = FN_DATA_DIR + "luIndex.xml"
-LU_DIR = FN_DATA_DIR + "lu/"
-FULLTEXT_DIR = FN_DATA_DIR + "fulltext/"
-FRAME_DIR = FN_DATA_DIR + "frame/"
-FRAME_REL_FILE = FN_DATA_DIR + "frRelation.xml"
+FN_DATA_DIR = os.path.normpath(DATA_DIR + "fndata-" + VERSION + "/")
+LU_INDEX = os.path.join(FN_DATA_DIR , "luIndex.xml")
+LU_DIR = os.path.join(FN_DATA_DIR , "lu/")
+FULLTEXT_DIR = os.path.join(FN_DATA_DIR , "fulltext/")
+FRAME_DIR = os.path.join(FN_DATA_DIR , "frame/")
+FRAME_REL_FILE = os.path.join(FN_DATA_DIR , "frRelation.xml")
 
 TEST_FILES = [
         "ANC__110CYL067.xml",
