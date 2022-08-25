@@ -113,7 +113,7 @@ elif options.mode == "predict":
     assert options.raw_input is not None
     instances, _, _ = read_conll(options.raw_input)
     suffix = f"__{options.output_suffix}" if options.output_suffix else ""
-    out_conll_file = "{}predicted-frames{}.conll".format(model_dir, suffix)
+    out_conll_file = os.path.join(model_dir, f"predicted-frames{suffix}.conll")
 else:
     raise Exception("Invalid parser mode", options.mode)
 

@@ -112,7 +112,7 @@ elif options.mode == "predict":
     with open(options.raw_input, "r") as fin:
         instances = [make_data_instance(line, i) for i, line in enumerate(fin)]
     suffix = f"__{options.output_suffix}" if options.output_suffix else ""
-    out_conll_file = "{}predicted-targets{}.conll".format(model_dir, suffix)
+    out_conll_file = os.path.join(model_dir, f"predicted-targets{suffix}.conll")
 else:
     raise Exception("Invalid parser mode", options.mode)
 
