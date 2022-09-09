@@ -46,6 +46,7 @@ optpr.add_option("--exemplar", action="store_true", default=False)
 optpr.add_option("--raw_input", type="str", metavar="FILE")
 optpr.add_option("--config", type="str", metavar="FILE")
 optpr.add_option("--output_suffix", type="str", metavar="FILE", default="")
+optpr.add_option("--train_data_tag", type="str", metavar="FILE", default="")
 (options, args) = optpr.parse_args()
 
 model_dir = os.path.normpath("logs/{}/".format(options.model_name))
@@ -57,7 +58,11 @@ if not os.path.exists(model_dir):
 if options.exemplar:
     train_conll = TRAIN_EXEMPLAR
 else:
-    train_conll = TRAIN_FTE
+    if options.train_data_tag:
+        name, ext = os.path.splitext(TRAIN_FTE)
+        train_conll = f"{name}_{options.train_data_tag}{ext}"
+    else:
+        train_conll = TRAIN_FTE
 
 USE_DROPOUT = True
 if options.mode in ["test", "predict"]:
