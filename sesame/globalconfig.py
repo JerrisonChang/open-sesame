@@ -81,9 +81,9 @@ DEV_FILES = [
 
 PTB_DATA_DIR = DATA_DIR + "ptb/"
 
-TRAIN_FTE_CONSTITS = "fn" + VERSION + ".fulltext.train.rnng.brackets"
-DEV_CONSTITS = "fn" + VERSION + ".dev.rnng.brackets"
-TEST_CONSTITS = "fn" + VERSION + ".test.rnng.brackets"
+TRAIN_FTE_CONSTITS = f"fn{VERSION}.fulltext.train.rnng.brackets"
+DEV_CONSTITS = f"fn{VERSION}.dev.rnng.brackets"
+TEST_CONSTITS = f"fn{VERSION}.test.rnng.brackets"
 
 CONSTIT_MAP = {
         TRAIN_FTE : TRAIN_FTE_CONSTITS,
