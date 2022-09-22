@@ -172,24 +172,28 @@ class CoNLL09Example(FrameSemParse):
 
         return mystr
 
-    def get_predicted_frame_conll(self, predicted_frame):
+    def get_predicted_frame_conll(self, predicted_frame, multipleframes=False):
         """
         Get new CoNLL string, after substituting predicted frame.
         """
         new_conll_str = ""
-        for e in range(len(self._elements)):
-            field = deepcopy(self._elements[e])
-            if (field.id - 1) in predicted_frame:
-                field.is_pred = True
-                field.lu = predicted_frame[field.id - 1][0].id
-                field.lupos = predicted_frame[field.id - 1][0].posid
-                field.frame = predicted_frame[field.id - 1][1].id
-            else:
-                field.is_pred = False
-                field.lu = LUDICT.getid(EMPTY_LABEL)
-                field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
-                field.frame = FRAMEDICT.getid(EMPTY_LABEL)
-            new_conll_str += field.get_str()
+        if not multipleframes:
+            for e in range(len(self._elements)):
+                field = deepcopy(self._elements[e])
+                if (field.id - 1) in predicted_frame:
+                    field.is_pred = True
+                    field.lu = predicted_frame[field.id - 1][0].id
+                    field.lupos = predicted_frame[field.id - 1][0].posid
+                    field.frame = predicted_frame[field.id - 1][1].id
+                else:
+                    field.is_pred = False
+                    field.lu = LUDICT.getid(EMPTY_LABEL)
+                    field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
+                    field.frame = FRAMEDICT.getid(EMPTY_LABEL)
+                new_conll_str += field.get_str()
+        else:
+            for i in self._elements:
+                field = deepcopy(i)
         return new_conll_str
 
     def get_predicted_target_conll(self, predicted_target, predicted_lu):

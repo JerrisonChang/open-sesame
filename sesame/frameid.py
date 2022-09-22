@@ -225,7 +225,7 @@ b_z = model.add_parameters((HIDDENDIM, 1))
 w_f = model.add_parameters((FRAMEDICT.size(), HIDDENDIM))
 b_f = model.add_parameters((FRAMEDICT.size(), 1))
 
-def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldframe=None):
+def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldframe=None, multipleframes=False):
     renew_cg()
     trainmode = (goldframe is not None)
 
@@ -276,24 +276,34 @@ def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldfra
         logloss = log_softmax(f_i, valid_frames)
 
         if not trainmode:
-            chosenframe = np.argmax(logloss.npvalue())
+            if multipleframes:
+                np_logloss = logloss.npvalue()
+                args_index = np.argpartition(np_logloss, 10)[-10:][::-1]
+                chosenframes = [i for i in args_index if np_logloss[i] != -np.inf]
+            else:
+                chosenframe = np.argmax(logloss.npvalue())
 
     if trainmode:
         chosenframe = goldframe.id
 
     losses = []
     if logloss is not None:
-        losses.append(pick(logloss, chosenframe))
+        if multipleframes:
+            losses = [pick(logloss, i) for i in chosenframes]
+        else:
+            losses.append(pick(logloss, chosenframe))
+    if multipleframes:
+        prediction = {tidx: [(lexunit, Frame(m), i) for i, m in chosenframes] for tidx in targetpositions}
+    else:
+        prediction = {tidx: (lexunit, Frame(chosenframe)) for tidx in targetpositions}
 
-    prediction = {tidx: (lexunit, Frame(chosenframe)) for tidx in targetpositions}
-
-    objective = -esum(losses) if losses else None
+    objective = -esum(losses) if losses else None # not important for prediction?
     return objective, prediction
 
-def print_as_conll(goldexamples, pred_targmaps):
+def print_as_conll(goldexamples, pred_targmaps, multipleframes=False):
     with codecs.open(out_conll_file, "w", "utf-8") as f:
         for g,p in zip(goldexamples, pred_targmaps):
-            result = g.get_predicted_frame_conll(p) + "\n"
+            result = g.get_predicted_frame_conll(p, multipleframes) + "\n"
             f.write(result)
         f.close()
 
