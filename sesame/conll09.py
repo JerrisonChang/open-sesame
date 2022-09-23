@@ -191,9 +191,24 @@ class CoNLL09Example(FrameSemParse):
                     field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
                     field.frame = FRAMEDICT.getid(EMPTY_LABEL)
                 new_conll_str += field.get_str()
-        else:
-            for i in self._elements:
-                field = deepcopy(i)
+        else: # multiframes
+            for tok_position, candidates in predicted_frame.items():
+                for (luid, frameid, loss) in candidates:
+                    for i in self._elements:
+                        field = deepcopy(i)
+                        if field.id - 1 == tok_position:
+                            field.is_pred = True
+                            field.lu = luid.id
+                            field.lupos = luid.posid
+                            field.frame = frameid.id
+                        else:
+                            field.is_pred = False
+                            field.lu = LUDICT.getid(EMPTY_LABEL)
+                            field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
+                            field.frame = FRAMEDICT.getid(EMPTY_LABEL)
+                        
+                        new_conll_str += field.get_str()
+                    new_conll_str += f"{loss}\n\n"
         return new_conll_str
 
     def get_predicted_target_conll(self, predicted_target, predicted_lu):

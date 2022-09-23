@@ -278,8 +278,8 @@ def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldfra
         if not trainmode:
             if multipleframes:
                 np_logloss = logloss.npvalue()
-                args_index = np.argpartition(np_logloss, 10)[-10:][::-1]
-                chosenframes = [i for i in args_index if np_logloss[i] != -np.inf]
+                args_index = np.argpartition(np_logloss, -10, axis=0)[-10:][::-1]
+                chosenframes = [i[0] for i in args_index if np_logloss[i] != -np.inf]
             else:
                 chosenframe = np.argmax(logloss.npvalue())
 
@@ -293,7 +293,7 @@ def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldfra
         else:
             losses.append(pick(logloss, chosenframe))
     if multipleframes:
-        prediction = {tidx: [(lexunit, Frame(m), i) for i, m in chosenframes] for tidx in targetpositions}
+        prediction = {tidx: [(lexunit, Frame(i), pick(logloss, i).npvalue()[0]) for i in chosenframes] for tidx in targetpositions}
     else:
         prediction = {tidx: (lexunit, Frame(chosenframe)) for tidx in targetpositions}
 
@@ -461,8 +461,8 @@ elif options.mode == "predict":
 
     predictions = []
     for instance in instances:
-        _, prediction = identify_frames(builders, instance.tokens, instance.postags, instance.lu, list(instance.targetframedict.keys()))
+        _, prediction = identify_frames(builders, instance.tokens, instance.postags, instance.lu, list(instance.targetframedict.keys()), multipleframes=True)
         predictions.append(prediction)
     sys.stderr.write("Printing output in CoNLL format to {}\n".format(out_conll_file))
-    print_as_conll(instances, predictions)
+    print_as_conll(instances, predictions, multipleframes= True)
     sys.stderr.write("Done!\n")
