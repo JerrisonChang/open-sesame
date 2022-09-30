@@ -65,6 +65,12 @@ class CoNLL09Element:
         else:
             self.role = FEDICT.addstr(ele[14])
 
+    def update_(self, lu_id, pos_id, frame_id, is_pred: bool):
+        self.is_pred = is_pred
+        self.lu = lu_id
+        self.lupos = pos_id
+        self.frame = frame_id
+
     def get_str(self, rolelabel=None, no_args=False):
         idstr = str(self.id)
         form = VOCDICT.getstr(self.form)
@@ -172,7 +178,7 @@ class CoNLL09Example(FrameSemParse):
 
         return mystr
 
-    def get_predicted_frame_conll(self, predicted_frame, multipleframes=False):
+    def get_predicted_frame_conll(self, predicted_frame: dict, multipleframes=False):
         """
         Get new CoNLL string, after substituting predicted frame.
         """
@@ -180,36 +186,38 @@ class CoNLL09Example(FrameSemParse):
         if not multipleframes:
             for e in range(len(self._elements)):
                 field = deepcopy(self._elements[e])
-                if (field.id - 1) in predicted_frame:
-                    field.is_pred = True
-                    field.lu = predicted_frame[field.id - 1][0].id
-                    field.lupos = predicted_frame[field.id - 1][0].posid
-                    field.frame = predicted_frame[field.id - 1][1].id
-                else:
-                    field.is_pred = False
-                    field.lu = LUDICT.getid(EMPTY_LABEL)
-                    field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
-                    field.frame = FRAMEDICT.getid(EMPTY_LABEL)
+                index = field.id - 1
+                is_target = (index) in predicted_frame
+                frame_info = predicted_frame.get(index, (None, None))
+                self.update_field(field, is_target, frame_info) 
                 new_conll_str += field.get_str()
+        
         else: # multiframes
             for tok_position, candidates in predicted_frame.items():
-                for (luid, frameid, loss) in candidates:
+                if isinstance(candidates, tuple):
                     for i in self._elements:
                         field = deepcopy(i)
-                        if field.id - 1 == tok_position:
-                            field.is_pred = True
-                            field.lu = luid.id
-                            field.lupos = luid.posid
-                            field.frame = frameid.id
-                        else:
-                            field.is_pred = False
-                            field.lu = LUDICT.getid(EMPTY_LABEL)
-                            field.lupos = LUPOSDICT.getid(EMPTY_LABEL)
-                            field.frame = FRAMEDICT.getid(EMPTY_LABEL)
-                        
+                        index = field.id - 1
+                        is_target = (index) in predicted_frame
+                        frame_info = predicted_frame.get(index, (None, None))
+                        self.update_field(field, is_target, frame_info) 
                         new_conll_str += field.get_str()
-                    new_conll_str += f"{loss}\n\n"
+                else:
+                    for (lu, frame, loss) in candidates:
+                        for i in self._elements:
+                            field = deepcopy(i)
+                            is_pred = field.id - 1 == tok_position
+                            self.update_field(field, is_pred, (lu, frame))
+                            new_conll_str += field.get_str()
+                        new_conll_str += f"{loss}\n\n" 
         return new_conll_str
+    
+    def update_field(self, field: CoNLL09Element, is_pred, predicted_frame):
+        lu, frame = predicted_frame
+        if is_pred:
+            field.update_(lu.id, lu.posid, frame.id, is_pred)
+        else:
+            field.update_(LUDICT.getid(EMPTY_LABEL), LUPOSDICT.getid(EMPTY_LABEL), FRAMEDICT.getid(EMPTY_LABEL), False)
 
     def get_predicted_target_conll(self, predicted_target, predicted_lu):
         """

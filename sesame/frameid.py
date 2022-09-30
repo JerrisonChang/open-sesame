@@ -261,6 +261,7 @@ def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldfra
 
     valid_frames = list(lufrmmap[lexunit.id])
     chosenframe = valid_frames[0]
+    chosenframes: list
     logloss = None
     if len(valid_frames) > 1:
         if USE_HIER and lexunit.id in relatedlus:
@@ -292,7 +293,8 @@ def identify_frames(builders, tokens, postags, lexunit, targetpositions, goldfra
             losses = [pick(logloss, i) for i in chosenframes]
         else:
             losses.append(pick(logloss, chosenframe))
-    if multipleframes:
+    
+    if multipleframes and len(valid_frames) > 1:
         prediction = {tidx: [(lexunit, Frame(i), pick(logloss, i).npvalue()[0]) for i in chosenframes] for tidx in targetpositions}
     else:
         prediction = {tidx: (lexunit, Frame(chosenframe)) for tidx in targetpositions}
