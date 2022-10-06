@@ -47,6 +47,8 @@ optpr.add_option("--raw_input", type="str", metavar="FILE")
 optpr.add_option("--config", type="str", metavar="FILE")
 optpr.add_option("--output_suffix", type="str", metavar="FILE", default="")
 optpr.add_option("--train_data_tag", type="str", metavar="FILE", default="")
+optpr.add_option("--multiple_frames", action='store_true')
+optpr.set_defaults(multiple_frames=False)
 (options, args) = optpr.parse_args()
 
 model_dir = os.path.normpath("logs/{}/".format(options.model_name))
@@ -463,8 +465,8 @@ elif options.mode == "predict":
 
     predictions = []
     for instance in instances:
-        _, prediction = identify_frames(builders, instance.tokens, instance.postags, instance.lu, list(instance.targetframedict.keys()), multipleframes=True)
+        _, prediction = identify_frames(builders, instance.tokens, instance.postags, instance.lu, list(instance.targetframedict.keys()), multipleframes= options.multiple_frames)
         predictions.append(prediction)
     sys.stderr.write("Printing output in CoNLL format to {}\n".format(out_conll_file))
-    print_as_conll(instances, predictions, multipleframes= True)
+    print_as_conll(instances, predictions, multipleframes= options.multiple_frames)
     sys.stderr.write("Done!\n")
