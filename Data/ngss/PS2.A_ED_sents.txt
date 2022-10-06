@@ -1,0 +1,16 @@
+Interactions of an object with another object can be explained and predicted using the concept of forces, which can cause a change in motion of one or both of the interacting objects.
+An individual force acts on one particular object and is described by its strength and direction.
+The strengths of forces can be measured and their values compared.
+What happens when a force is applied to an object depends not only on that force but also on all the other forces acting on that object.
+A static object typically has multiple forces acting on it, but they sum to zero.
+If the total (vector sum) force on an object is not zero, however, its motion will change.
+Sometimes forces on an object can also change its shape or orienta- tion.
+For any pair of interacting objects, the force exerted by the first object on the second object is equal in strength to the force that the second object exerts on the first but in the opposite direction (Newton’s third law).
+At the macroscale, the motion of an object subject to forces is governed by Newton’s second law of motion.
+Under everyday circumstances, the mathematical expression of this law in the form F = ma (total force = mass times acceleration) accurately predicts changes in the motion of a single macroscopic object of a given mass due to the total force on it.
+But at speeds close to the speed of light, the second law is not applicable without modification.
+Nor does it apply to objects at the molecular, atomic, and subatomic scales, or to an object whose mass is changing at the same time as its speed.
+For speeds that are small compared with the speed of light, the momentum of an object is defined as its mass times its velocity.
+For any system of interacting objects, the total momentum within the system changes only due to transfer of momentum into or out of the system, either because of external forces acting on the system or because of matter flows.
+Within an isolated system of interacting objects, any change in momentum of one object is balanced by an equal and oppositely directed change in the total momentum of the other objects.
+Thus total momentum is a conserved quantity.
