@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "sesame.frameid",
             "args": ["--mode", "predict",  "--model_name", "frameid0724" , 
-            "--raw_input", "logs/targetid0724/predicted-targets.conll", "--output_suffix", "testing0915"],
+            "--raw_input", "logs/targetid0724/predicted-targets__multiframes.conll", "--output_suffix", "multiframes"],
             "justMyCode": true
         }
     ]
